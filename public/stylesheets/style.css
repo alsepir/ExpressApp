@@ -1,0 +1,46 @@
+html {
+  font-family: sans-serif;
+}
+
+table {
+  table-layout: fixed;
+  width: 400px;
+  border-collapse: collapse;
+  
+  letter-spacing: 1px;
+  font-size: 0.8rem;
+}
+
+tr:last-child {
+  display: none;
+}
+
+th {
+  border: 2px solid blue;
+  background-color: blue;
+  color: white;
+  text-align: start;
+  padding-left: 5px;
+  padding-top: 20px;
+  box-sizing: border-box;
+}
+
+td {
+  border: 2px solid rgb(190,190,190);
+  padding: 0px 5px;
+  text-align: start;
+  height: 20px;
+  box-sizing: border-box;
+}
+
+.table_fill-cell {
+  background-color: rgb(190,190,190);
+}
+
+.table_bold {
+  font-weight: bold;
+}
+
+.error {
+  color: red;
+}

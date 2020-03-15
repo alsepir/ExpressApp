@@ -1,0 +1,31 @@
+doctype html
+html(lang="ru")
+  head
+    title #{title}
+    meta(charset='utf-8')
+    link(rel='stylesheet' href='/stylesheets/style.css')
+  body
+    mixin table-row(options)
+      - var rows = 1
+      each option in options.books
+        tr
+          td.table_bold #{rows == 1 ? options.name : ''}
+          td #{rows == 1 ? options.old : ''}
+          td #{option.title}
+          td #{option.year}
+        - rows++
+
+    table
+      tr
+        th Автор
+        th Возраст
+        th Название
+        th Год
+      
+      each item in data
+        +table-row(item)
+        tr.table_fill-cell
+          td
+          td
+          td
+          td
