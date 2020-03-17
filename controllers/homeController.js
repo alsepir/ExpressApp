@@ -1,30 +1,32 @@
+const requestPromise = require("request-promise");
 const View = require("../views/Views.js");
-const model = require("../models/Model.js");
+//const model = require("../models/Model.js");
 
 module.exports = {
-  index: function(request, response, next) {
-    if(model.dbIsConnect) {
-      let content = this.getContent();
+  index(request, response, next) {
+    requestPromise({
+      uri: "http://z.bokus.ru/user.json",
+      json: true
+    }).then((data) => {
+      let content = this.getContent(data);
+      console.log(content)
 
       let view = new View(response, "table");
       view.render({
         title: "Таблица",
         data: content
       });
-    } else {
+    }).catch(() => {
+      console.log("Ошибка соединения с ресурсом: http://z.bokus.ru/user.json");
+
       let view = new View(response, "error");
       view.render({
         title: "Таблица",
         data: "Нет связи с базой данных"
       });
-    }
+    })
   },
-  getContent: function() {
-    let data = model.getData();
-
-    return this._map(data);
-  },
-  _map: function(data) {
+  getContent(data) {
     let {user, book} = data;
     let arr = [];
 
