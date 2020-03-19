@@ -46,33 +46,24 @@ module.exports = {
 
   transformDataForComponent(data) {
     let {user, book} = data;
-    let arr = [];
+    let userBooks = [];
 
-    for(let index in book) {
-      let elm = book[index];
+    for(let id in user) {
+      let currentUser = user[id];
+      currentUser.books = [];
+      userBooks.push(currentUser);
+    }
 
-      if(elm.uid) {
-        let id = elm.uid - 1000;
-        
-        if(arr[id-1]) {
-          arr[id-1].books.push({
-            title: elm.title,
-            year: elm.year
-          });
-        } else {
-          arr[id-1] = {
-            id: id,
-            name: user[id-1].name,
-            old: user[id-1].old,
-            books: [{
-              title: elm.title,
-              year: elm.year
-            }]
-          };
-        }
+    for(let item in book) {
+      let currentBook = book[item];
+
+      if(currentBook.uid) {
+        let userId = currentBook.uid - 1001;
+        let booksForUserId = userBooks[userId].books;
+        booksForUserId.push({title: currentBook.title, year: currentBook.year})
       }
     }
 
-    return arr;
+    return userBooks;
   }
 }
