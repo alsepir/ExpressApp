@@ -1,32 +1,50 @@
-const requestPromise = require("request-promise");
-const View = require("../views/Views.js");
-//const model = require("../models/Model.js");
+const View = require('../views/Views.js');
+const rest = require('../rest/rest.js');
 
 module.exports = {
   index(request, response, next) {
-    requestPromise({
-      uri: "http://z.bokus.ru/user.json",
-      json: true
-    }).then((data) => {
-      let content = this.getContent(data);
-      console.log(content)
+    let options = {
+      host: 'z.bokus.ru',
+      path: '/user.json',
+      port: 80,
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
 
-      let view = new View(response, "table");
-      view.render({
-        title: "Таблица",
-        data: content
-      });
-    }).catch(() => {
-      console.log("Ошибка соединения с ресурсом: http://z.bokus.ru/user.json");
-
-      let view = new View(response, "error");
-      view.render({
-        title: "Таблица",
-        data: "Нет связи с базой данных"
-      });
-    })
+    rest.getJSON(options)
+      .then(
+        (data) => {
+          //console.log('onResolve:', data);
+          this.sendSuccess(response, data);
+        }, 
+        (error) => {
+          console.log('Ошибка соединения с ресурсом: http://z.bokus.ru/user.json');
+          this.sendError(response);
+        }
+      );
   },
-  getContent(data) {
+
+  sendSuccess(response, data) {
+    let validData = this.transformDataForComponent(data);
+
+    let view = new View(response, 'table');
+    view.render({
+      title: 'Таблица',
+      data: validData
+    });
+  },
+
+  sendError(response) {
+    let view = new View(response, 'error');
+    view.render({
+      title: 'Таблица',
+      data: 'Нет связи с базой данных'
+    });
+  },
+
+  transformDataForComponent(data) {
     let {user, book} = data;
     let arr = [];
 
